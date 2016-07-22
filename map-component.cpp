@@ -13,7 +13,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 // map-component: program to extract one connected component (e.g. the territory
 // of one species) from the map. You can then edit it and map-merge it back in.
 // $ g++ --std=c++11 -o map-component map-component.cpp
-// $ ./map-component <file> <system>... > <out>
+// $ ./map-component <file> [<system>...] > <out>
 
 #include "shared/DisjointSet.cpp"
 
@@ -32,7 +32,7 @@ string Token(const string &line, int index = 0);
 
 int main(int argc, char *argv[])
 {
-	if(argc < 3)
+	if(argc < 2)
 	{
 		PrintHelp();
 		return 1;
@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
 		components.push_back(*it);
 	for(const pair<string, string> &it : systems)
 	{
-		bool match = false;
+		bool match = components.empty();
 		for(const string &component : components)
 			match |= links.IsJoined(it.first, component);
 		
@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
 void PrintHelp()
 {
 	cerr << endl;
-	cerr << "Usage: $ map-component <map> <system>..." << endl;
+	cerr << "Usage: $ map-component <map> [<system>...]" << endl;
 	cerr << "   where <map> is the map file to extract a component from," << endl;
 	cerr << "   and <system> is any system in that component." << endl;
 	cerr << endl;
