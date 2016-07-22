@@ -48,7 +48,15 @@ void DisjointSet::Join(const string &first, const string &second)
 
 bool DisjointSet::IsJoined(const string &first, const string &second) const
 {
-	return Root(first) == Root(second);
+	if(first == second)
+		return true;
+	
+	string firstRoot = Root(first);
+	string secondRoot = Root(second);
+	if(firstRoot.empty() || secondRoot.empty())
+		return false;
+	
+	return firstRoot == secondRoot;
 }
 
 
