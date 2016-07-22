@@ -46,6 +46,23 @@ double Value(const string &line, int index)
 	return value;
 }
 
+void Color(double &r, double &g, double &b, double value)
+{
+	value = value * 2. - 1.;
+	if(value < 0.)
+	{
+		r = 20. + 20. * value;
+		g = 80. + 60. * value;
+		b = 80. - 20. * value;
+	}
+	else
+	{
+		r = 20. + 80. * value;
+		g = 80.;
+		b = 80. - 80. * value;
+	}
+}
+
 
 
 int main(int argc, char *argv[])
@@ -56,6 +73,7 @@ int main(int argc, char *argv[])
 	map<string, double> posX;
 	map<string, double> posY;
 	map<string, string> gov;
+	map<string, double> trade;
 	map<string, set<string>> links;
 	
 	map<string, double> govR;
@@ -71,7 +89,22 @@ int main(int argc, char *argv[])
 	string name;
 	
 	// First, read the government file, if any.
-	if(argv[2])
+	string commodity;
+	double tradeMin = 0.;
+	double tradeMax = 2000.;
+	if(argv[2] && argv[3])
+	{
+		commodity = argv[3];
+		ifstream in(argv[2]);
+		
+		while(getline(in, line))
+			if(StartsWith(line, "\tcommodity") && Token(line, 1) == commodity)
+			{
+				tradeMin = Value(line, 2);
+				tradeMax = Value(line, 3);
+			}
+	}
+	else if(argv[2])
 	{
 		ifstream in(argv[2]);
 		
@@ -110,6 +143,8 @@ int main(int argc, char *argv[])
 			gov[name] = Token(line, 1);
 		else if(StartsWith(line, "\tlink") && !name.empty())
 			links[name].insert(Token(line, 1));
+		else if(StartsWith(line, "\ttrade") && !name.empty() && Token(line, 1) == commodity)
+			trade[name] = max(0., min(1., (Value(line, 2) - tradeMin) / (tradeMax - tradeMin)));
 		else if(!StartsWith(line, "\t"))
 			name.clear();
 	}
@@ -160,8 +195,11 @@ int main(int argc, char *argv[])
 		double r = 100.;
 		double g = 100.;
 		double b = 100.;
+		auto cit = trade.find(system);
 		auto git = gov.find(system);
-		if(git != gov.end() && govR.find(git->second) != govR.end())
+		if(cit != trade.end())
+			Color(r, g, b, cit->second);
+		else if(git != gov.end() && govR.find(git->second) != govR.end())
 		{
 			r = 100. * govR[git->second];
 			g = 100. * govG[git->second];
