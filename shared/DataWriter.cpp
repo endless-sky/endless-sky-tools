@@ -28,24 +28,17 @@ const string DataWriter::space = " ";
 
 
 
-DataWriter::DataWriter(const string &path)
-	: path(path), before(&indent)
+DataWriter::DataWriter()
+	: before(&indent)
 {
 	out.precision(8);
 }
 
 
 
-DataWriter::~DataWriter()
+string DataWriter::ToString() const
 {
-#if defined _WIN32
-	FILE *file = _wfopen(ToUTF16(path).c_str(), L"wb");
-#else
-	FILE *file = fopen(path.c_str(), "wb");
-#endif
-	
-	string data = out.str();
-	fwrite(&data[0], 1, data.size(), file);
+	return out.str();
 }
 
 
@@ -94,6 +87,13 @@ void DataWriter::EndChild()
 void DataWriter::WriteComment(const string &str)
 {
 	out << indent << "# " << str << '\n';
+}
+
+
+
+void DataWriter::AddLineBreak()
+{
+	out << '\n';
 }
 
 

@@ -27,8 +27,9 @@ class DataNode;
 // automatically adds quotation marks around strings if they contain whitespace.
 class DataWriter {
 public:
-	DataWriter(const std::string &path);
-	~DataWriter();
+	DataWriter();
+	
+	string ToString() const;
 	
   template <class A, class ...B>
 	void Write(const A &a, B... others);
@@ -39,6 +40,7 @@ public:
 	void EndChild();
 	
 	void WriteComment(const std::string &str);
+	void AddLineBreak();
 	
 	// Write a token, without writing a whole line. Use this very carefully.
 	void WriteToken(const char *a);
@@ -48,7 +50,6 @@ public:
 	
 	
 private:
-	std::string path;
 	std::string indent;
 	static const std::string space;
 	const std::string *before;
