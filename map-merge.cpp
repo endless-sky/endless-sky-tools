@@ -35,6 +35,11 @@ void Write(DataWriter &out, const string &root, const map<string, Object> &data,
 
 int main(int argc, char *argv[])
 {
+	if(argc < 2)
+	{
+		PrintHelp();
+		return 1;
+	}
 	
 	map<string, Object> galaxies;
 	map<string, Object> systems;
