@@ -1,0 +1,3 @@
+name "Electronics"
+base 590
+bins 30 40 30

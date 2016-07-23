@@ -1,0 +1,3 @@
+name "Metal"
+base 190
+bins 30 25 20 25

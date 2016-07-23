@@ -1,0 +1,3 @@
+name "Industrial"
+base 520
+bins 20 30 30 20
