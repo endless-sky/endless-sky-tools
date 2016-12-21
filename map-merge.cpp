@@ -81,9 +81,10 @@ int main(int argc, char *argv[])
 	static const vector<string> GALAXY = {
 		"pos", "sprite"};
 	static const vector<string> SYSTEM = {
-		"pos", "government", "habitable", "link", "asteroids", "trade", "fleet", "object"};
+		"pos", "government", "music", "habitable", "belt", "link", "asteroids", "minables",
+		"trade", "fleet", "object"};
 	static const vector<string> PLANET = {
-		"attributes", "landscape", "description", "spaceport", "shipyard", "outfitter",
+		"attributes", "landscape", "music", "description", "spaceport", "shipyard", "outfitter",
 		"required reputation", "bribe", "security", "tribute"};
 	
 	DataWriter out;
