@@ -1,5 +1,6 @@
 // g++ --std=c++0x blend.cpp -o blend -lpng
 
+#include <zlib.h>
 #include <png.h>
 
 #include <iostream>
