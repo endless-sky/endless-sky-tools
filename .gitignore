@@ -1,6 +1,26 @@
 # Compiled Binaries
 *.exe
 
+# dlls needed to run the binary
+*.dll
+
+# Build Directories and toolchain-generated files
+build/
+obj/
+bin/
+lib/
+x64/
+Debug/
+install/
+Release/
+*.o
+*.layout
+*.depend
+scons-local*
+.sconsign.dblite
+/*.d
+/vcpkg/
+
 # OS-specific generated files
 .DS_Store
 *.db
