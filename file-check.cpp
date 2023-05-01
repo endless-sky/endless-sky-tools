@@ -24,15 +24,19 @@ int main(int argc, char *argv[])
 		char *end = data + bytes;
 		
 		int line = 1;
-		for(char *cit = data; cit < end; ++cit)
+		int pos = 1;
+		for(char *cit = data; cit < end; ++cit, ++pos)
 		{
 			if(*cit == '\n')
+			{
 				++line;
+				pos = 0;
+			}
 			else if(*cit == '\t')
 				continue;
 			else if(*cit < ' ' || *cit == 127)
 			{
-				cerr << *it << ":" << line << ": Invalid character (" << int(*cit) << ")." << endl;
+				cerr << *it << ":" << line << ":" << pos << ": Invalid character (" << int(*cit) << ")." << endl;
 				break;
 			}
 		}
