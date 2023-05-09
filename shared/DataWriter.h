@@ -13,8 +13,8 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #ifndef DATA_WRITER_H_
 #define DATA_WRITER_H_
 
-#include <string>
 #include <sstream>
+#include <string>
 
 class DataNode;
 
@@ -28,27 +28,27 @@ class DataNode;
 class DataWriter {
 public:
 	DataWriter();
-	
+
 	string ToString() const;
-	
+
   template <class A, class ...B>
 	void Write(const A &a, B... others);
 	void Write(const DataNode &node);
 	void Write();
-	
+
 	void BeginChild();
 	void EndChild();
-	
+
 	void WriteComment(const std::string &str);
 	void AddLineBreak();
-	
+
 	// Write a token, without writing a whole line. Use this very carefully.
 	void WriteToken(const char *a);
 	void WriteToken(const std::string &a);
   template <class A>
 	void WriteToken(const A &a);
-	
-	
+
+
 private:
 	std::string indent;
 	static const std::string space;
@@ -72,7 +72,7 @@ void DataWriter::WriteToken(const A &a)
 {
 	static_assert(std::is_arithmetic<A>::value,
 		"DataWriter cannot output anything but strings and arithmetic types.");
-	
+
 	out << *before << a;
 	before = &space;
 }

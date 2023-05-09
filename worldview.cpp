@@ -5,14 +5,14 @@
 #include "shared/DataFile.cpp"
 #include "shared/DataNode.cpp"
 
-#include <vector>
-#include <map>
-#include <string>
-#include <iostream>
-#include <limits>
 #include <algorithm>
 #include <fstream>
+#include <iostream>
+#include <limits>
+#include <map>
 #include <set>
+#include <string>
+#include <vector>
 
 using namespace std;
 
@@ -21,7 +21,7 @@ namespace {
 	double minY = numeric_limits<double>::infinity();
 	double maxX = -numeric_limits<double>::infinity();
 	double maxY = -numeric_limits<double>::infinity();
-	
+
 	map<string, int> uses;
 }
 
@@ -48,7 +48,7 @@ static const vector<Commodity> commodities = {
 class System {
 public:
 	void Load(const DataNode &node);
-	
+
 	const DataNode *root;
 	double x;
 	double y;
@@ -63,7 +63,7 @@ public:
 class Planet {
 public:
 	void Load(const DataNode &node);
-	
+
 	string landscape;
 	string description;
 	string spaceport;
@@ -80,9 +80,9 @@ int main(int argc, char *argv[])
 {
 	if(argc < 2)
 		return 1;
-	
+
 	DataFile file(argv[1]);
-	
+
 	map<string, System> systems;
 	map<string, Planet> planets;
 	for(const DataNode &node : file)
@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
 		else if(node.Token(0) == "planet" && node.Size() >= 2)
 			planets[node.Token(1)].Load(node);
 	}
-	
+
 	// Draw all systems:
 	ofstream mapFile("map.svg");
 	mapFile << "<svg width=\"240\" height=\"240\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n";
@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
 	for(const pair<string, System> &it : systems)
 	{
 		const System &system = it.second;
-		
+
 		double x1 = (system.x - centerX) * scale + radius;
 		double y1 = (system.y - centerY) * scale + radius;
 		for(const string &link : system.links)
@@ -111,14 +111,14 @@ int main(int argc, char *argv[])
 			// Only draw links in one direction.
 			if(link <= it.first)
 				continue;
-			
+
 			map<string, System>::iterator lit = systems.find(link);
 			if(lit == systems.end())
 				continue;
-			
+
 			double x2 = (lit->second.x - centerX) * scale + radius;
 			double y2 = (lit->second.y - centerY) * scale + radius;
-			
+
 			mapFile << "\n<line x1=\"" << x1 << "\" y1=\"" << y1
 				<< "\" x2=\"" << x2 << "\" y2=\"" << y2
 				<< "\" stroke=\"#333\" stroke-width=\"1.4\"/>";
@@ -126,7 +126,7 @@ int main(int argc, char *argv[])
 	}
 	mapFile << "\n</svg>\n";
 	mapFile.close();
-	
+
 	cout << "<html><head><title>World Viewer</title>" << endl;
 	cout << "<style>p {margin-top: 0.2em; margin-bottom: 0.2em; line-height: 150%;}</style></head>" << endl;
 	cout << "<body style=\"background-color:black; color:white;\"><table>" << endl;
@@ -135,30 +135,30 @@ int main(int argc, char *argv[])
 		size_t count = it.second.planets.size();
 		if(!count)
 			continue;
-		
+
 		cout << "<tr><td align=\"center\" valign=\"top\" rowspan=\"" << count
 			<< "\">" << it.first;
 		for(const string &star : it.second.stars)
 			cout << "<br/><img src=\"../images/" << star << ".png\">";
 		cout << "<p>Government: " << it.second.government << "</p>";
-		
+
 		// Draw system location:
 		double x = (it.second.x - centerX) * scale + radius;
 		double y = (it.second.y - centerY) * scale + radius;
-		
+
 		cout << "<svg width=\"240\" height=\"240\">";
 		cout << "<image x=\"0\" y=\"0\" width=\"240\" height=\"240\" xlink:href=\"map.svg\"/>";
 		cout << "<circle cx=\"" << x << "\" cy=\"" << y
 			<< "\" r=\"2\" fill=\"#FC3\" stroke=\"none\"/>";
 		cout << "</svg><br/>\n";
-		
+
 		cout << "<table>";
 		for(const Commodity &commodity : commodities)
 		{
 			auto cit = it.second.trade.find(commodity.name);
 			if(cit == it.second.trade.end())
 				continue;
-			
+
 			int price = cit->second;
 			int third = (commodity.high - commodity.low) / 3;
 			string color = (price < commodity.low + third) ? "#6699FF"
@@ -167,7 +167,7 @@ int main(int argc, char *argv[])
 				<< commodity.name << "</td><td>" << price << "</td></tr>";
 		}
 		cout << "</table><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></td>" << endl;
-		
+
 		bool first = true;
 		for(const pair<string, string> &planet : it.second.planets)
 		{
@@ -175,19 +175,19 @@ int main(int argc, char *argv[])
 				cout << "<tr>";
 			cout << "<td valign=\"top\" align=\"center\">" << planet.first;
 			cout << "<br/><img src=\"../images/" << planet.second << ".png\">\n";
-			
+
 			const Planet &data = planets[planet.first];
 			cout << "<p style=\"color:#666\">(" << uses[planet.second] << " / "
 				<< uses[data.landscape] << " uses.</p>";
-			
+
 			// Draw the star system, with this planet highlighted.
 			double distance = MaxDistance(*it.second.root);
 			double scale = min(.03, 116. / distance);
-	
+
 			cout << "<svg width=\"240\" height=\"240\">";
 			Draw(*it.second.root, 120., 120., scale, planet.first);
 			cout << "</svg>\n";
-			
+
 			if(!data.shipyard.empty())
 			{
 				cout << "<p>Shipyard:</p>" << endl;
@@ -216,7 +216,7 @@ int main(int argc, char *argv[])
 			if(!first)
 				cout << "</tr>";
 			cout << endl;
-			
+
 			first = false;
 		}
 		cout << "</tr>" << endl;
@@ -230,7 +230,7 @@ void System::Load(const DataNode &node)
 {
 	if(node.Token(0) == "system")
 		root = &node;
-	
+
 	for(const DataNode &child : node)
 	{
 		if(child.Token(0) == "object")
@@ -245,7 +245,7 @@ void System::Load(const DataNode &node)
 				planets.push_back(planet);
 				seenPlanets.insert(planet.first);
 			}
-			// Recurse into 			
+			// Recurse into
 			Load(child);
 		}
 		else if(child.Token(0) == "sprite" && child.Size() >= 2)
@@ -265,7 +265,7 @@ void System::Load(const DataNode &node)
 			x = child.Value(1);
 			minX = min(minX, x);
 			maxX = max(maxX, x);
-			
+
 			y = child.Value(2);
 			minY = min(minY, y);
 			maxY = max(maxY, y);
@@ -308,7 +308,7 @@ void Planet::Load(const DataNode &node)
 double MaxDistance(const DataNode &node, double d)
 {
 	double maximum = d;
-	
+
 	for(const DataNode &child : node)
 	{
 		if(child.Token(0) == "object")
@@ -334,7 +334,7 @@ void Draw(const DataNode &node, double x, double y, double scale, const string &
 		cout << "<circle cx=\"" << x << "\" cy=\"" << y
 			<< "\" r=\"2\" fill=\"#39F\" stroke=\"none\"/>";
 	}
-	
+
 	for(const DataNode &child : node)
 	{
 		if(child.Token(0) == "object")
@@ -351,12 +351,12 @@ void Draw(const DataNode &node, double x, double y, double scale, const string &
 				else if(grand.Token(0) == "offset")
 					offset = grand.Value(1);
 			}
-			
+
 			distance *= scale;
 			distance += 1.;
 			cout << "<circle cx=\"" << x << "\" cy=\"" << y << "\" r=\"" << distance
 				<< "\" stroke=\"#333\" stroke-width=\"1.4\" fill=\"none\"/>";
-			
+
 			double angle = (offset + 100000. / period) * 0.017453293;
 			Draw(child, x + distance * sin(angle), y + distance * cos(angle), scale, name);
 		}
