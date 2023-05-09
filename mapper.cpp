@@ -1,3 +1,18 @@
+/* mapper.cpp
+Copyright (c) 2016 by Michael Zahniser
+
+Endless Sky is free software: you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later version.
+
+Endless Sky is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program. If not, see <https://www.gnu.org/licenses/>.
+*/
+
 // Program for generating a map of the galaxy, colored by government.
 // $ g++ --std=c++11 -o mapper mapper.cpp
 // $ ./mapper path/to/map.txt path/to/governments.txt > map.svg
@@ -19,19 +34,19 @@ bool StartsWith(const string &line, const string &str)
 string Token(const string &line, int index)
 {
 	size_t pos = 0;
-	
+
 	while(pos < line.length())
 	{
 		while(line[pos] <= ' ')
 			++pos;
-		
+
 		char quote = 0;
 		if(line[pos] == '"' || line[pos] == '`')
 			quote = line[pos++];
 		size_t start = pos;
 		while(pos < line.length() && (quote ? (line[pos] != quote) : (line[pos] > ' ')))
 			++pos;
-		
+
 		if(!index--)
 			return line.substr(start, pos - start);
 		pos = pos + !!quote;
@@ -69,25 +84,25 @@ int main(int argc, char *argv[])
 {
 	if(argc <= 1)
 		return 1;
-	
+
 	map<string, double> posX;
 	map<string, double> posY;
 	map<string, string> gov;
 	map<string, double> trade;
 	map<string, set<string>> links;
-	
+
 	map<string, double> govR;
 	map<string, double> govG;
 	map<string, double> govB;
-	
+
 	double minX = 0.;
 	double maxX = 0.;
 	double minY = 0.;
 	double maxY = 0.;
-	
+
 	string line;
 	string name;
-	
+
 	// First, read the government file, if any.
 	string commodity;
 	double tradeMin = 0.;
@@ -96,7 +111,7 @@ int main(int argc, char *argv[])
 	{
 		commodity = argv[3];
 		ifstream in(argv[2]);
-		
+
 		while(getline(in, line))
 			if(StartsWith(line, "\tcommodity") && Token(line, 1) == commodity)
 			{
@@ -107,7 +122,7 @@ int main(int argc, char *argv[])
 	else if(argv[2])
 	{
 		ifstream in(argv[2]);
-		
+
 		while(getline(in, line))
 		{
 			if(StartsWith(line, "government"))
@@ -121,7 +136,7 @@ int main(int argc, char *argv[])
 		}
 		name.clear();
 	}
-	
+
 	// Now, parse the map.
 	ifstream in(argv[1]);
 	while(getline(in, line))
@@ -148,7 +163,7 @@ int main(int argc, char *argv[])
 		else if(!StartsWith(line, "\t"))
 			name.clear();
 	}
-	
+
 	// Add a slight border around the edges.
 	const double BORDER = .05;
 	double xBorder = (maxX - minX) * BORDER;
@@ -157,7 +172,7 @@ int main(int argc, char *argv[])
 	double yBorder = (maxY - minY) * BORDER;
 	minY -= yBorder;
 	maxY += yBorder;
-	
+
 	// Figure out the scale to apply to the map to keep dimensions below...
 	const double MAX_DIMENSION = 600.;
 	double scale = MAX_DIMENSION / max(maxX - minX, maxY - minY);
@@ -165,7 +180,7 @@ int main(int argc, char *argv[])
 	int height = scale * (maxY - minY);
 	cout << "<svg width=\"" << width << "\" height=\"" << height << "\">" << endl;
 	cout << "<rect width=\"" << width << "\" height=\"" << height << "\" fill=\"black\" />" << endl;
-	
+
 	// Draw the links.
 	for(const auto &it : posX)
 	{
@@ -179,12 +194,12 @@ int main(int argc, char *argv[])
 				continue;
 			double x2 = (posX[link] - minX) * scale;
 			double y2 = (posY[link] - minY) * scale;
-			
+
 			cout << "<line x1=\"" << x1 << "\" y1=\"" << y1 << "\" x2=\"" << x2 << "\" y2=\"" << y2
 				<< "\" style=\"stroke:#666666\" />" << endl;
 		}
 	}
-	
+
 	// Draw circles for the systems.
 	const double RADIUS = 2.;
 	for(const auto &it : posX)
@@ -207,11 +222,11 @@ int main(int argc, char *argv[])
 		}
 		else
 			cerr << system << endl;
-		
+
 		cout << "<circle cx=\"" << x << "\" cy=\"" << y << "\" r=\"" << RADIUS
 			<< "\" fill=\"rgb(" << r << "%, " << g << "%, " << b << "%)\" />" << endl;
 	}
-	
+
 	cout << "</svg>" << endl;
 	return 0;
 }
