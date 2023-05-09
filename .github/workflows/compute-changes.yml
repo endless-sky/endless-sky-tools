@@ -1,0 +1,22 @@
+name: Compute Changes
+
+on:
+  workflow_call:
+    outputs:
+      source_code:
+        value: ${{ jobs.changed.outputs.source_code }}
+
+jobs:
+  changed:
+    runs-on: ubuntu-latest
+    outputs:
+      source_code: ${{ steps.filter.outputs.source_code }}
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 2
+    - uses: dorny/paths-filter@v2
+      id: filter
+      with:
+        filters: .github/path-filters.yml
+        token: ${{ github.token }}
