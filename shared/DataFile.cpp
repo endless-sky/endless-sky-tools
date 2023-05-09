@@ -7,7 +7,10 @@ Foundation, either version 3 of the License, or (at your option) any later versi
 
 Endless Sky is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "DataFile.h"
@@ -61,11 +64,11 @@ void DataFile::Load(const string &path)
 	size_t bytes = fread(&data[0], 1, data.size(), file);
 	if(bytes != data.size())
 		throw runtime_error("Error reading file!");
-	
+
 	// As a sentinel, make sure the file always ends in a newline.
 	if(data.empty() || data.back() != '\n')
 		data.push_back('\n');
-	
+
 	Load(&*data.begin(), &*data.end());
 }
 
@@ -74,7 +77,7 @@ void DataFile::Load(const string &path)
 void DataFile::Load(istream &in)
 {
 	vector<char> data;
-	
+
 	static const size_t BLOCK = 4096;
 	while(in)
 	{
@@ -86,7 +89,7 @@ void DataFile::Load(istream &in)
 	// As a sentinel, make sure the file always ends in a newline.
 	if(data.back() != '\n')
 		data.push_back('\n');
-	
+
 	Load(&*data.begin(), &*data.end());
 }
 
@@ -110,14 +113,14 @@ void DataFile::Load(const char *it, const char *end)
 {
 	vector<DataNode *> stack(1, &root);
 	vector<int> whiteStack(1, -1);
-	
+
 	for( ; it != end; ++it)
 	{
 		// Find the first non-white character in this line.
 		int white = 0;
 		for( ; *it <= ' ' && *it != '\n'; ++it)
 			++white;
-		
+
 		// If the line is a comment, skip to the end of the line.
 		if(*it == '#')
 		{
@@ -127,7 +130,7 @@ void DataFile::Load(const char *it, const char *end)
 		// Skip empty lines (including comment lines).
 		if(*it == '\n')
 			continue;
-		
+
 		// Determine where in the node tree we are inserting this node, based on
 		// whether it has more indentation that the previous node, less, or the same.
 		while(whiteStack.back() >= white)
@@ -135,29 +138,29 @@ void DataFile::Load(const char *it, const char *end)
 			whiteStack.pop_back();
 			stack.pop_back();
 		}
-		
+
 		// Add this node as a child of the proper node.
 		list<DataNode> &children = stack.back()->children;
 		children.emplace_back(stack.back());
 		DataNode &node = children.back();
-		
+
 		// Remember where in the tree we are.
 		stack.push_back(&node);
 		whiteStack.push_back(white);
-		
+
 		// Tokenize the line. Skip comments and empty lines.
 		while(*it != '\n')
 		{
 			char endQuote = *it;
 			bool isQuoted = (endQuote == '"' || endQuote == '`');
 			it += isQuoted;
-			
+
 			const char *start = it;
-			
+
 			// Find the end of this token.
 			while(*it != '\n' && (isQuoted ? (*it != endQuote) : (*it > ' ')))
 				++it;
-			
+
 			// It ought to be legal to construct a string from an empty iterator
 			// range, but it appears that some libraries do not handle that case
 			// correctly. So:
@@ -167,13 +170,13 @@ void DataFile::Load(const char *it, const char *end)
 				node.tokens.emplace_back(start, it);
 			if(isQuoted && *it == '\n')
 				node.PrintTrace("Closing quotation mark is missing:");
-			
+
 			if(*it != '\n')
 			{
 				it += isQuoted;
 				while(*it != '\n' && *it <= ' ' && *it != '#')
 					++it;
-				
+
 				// If a comment is encountered outside of a token, skip the rest
 				// of this line of the file.
 				if(*it == '#')

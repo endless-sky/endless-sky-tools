@@ -7,7 +7,10 @@ Foundation, either version 3 of the License, or (at your option) any later versi
 
 Endless Sky is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
 // map-merge: program to merge map data from two or more files.
@@ -40,12 +43,12 @@ int main(int argc, char *argv[])
 		PrintHelp();
 		return 1;
 	}
-	
+
 	map<string, Object> galaxies;
 	map<string, Object> systems;
 	map<string, Object> planets;
 	vector<DataNode> others;
-	
+
 	string line;
 	for(char **it = argv + 1; *it; ++it)
 	{
@@ -64,7 +67,7 @@ int main(int argc, char *argv[])
 				others.push_back(node);
 				continue;
 			}
-			
+
 			set<string> active;
 			for(const DataNode &child : node)
 			{
@@ -77,7 +80,7 @@ int main(int argc, char *argv[])
 			}
 		}
 	}
-	
+
 	static const vector<string> GALAXY = {
 		"pos", "sprite"};
 	static const vector<string> SYSTEM = {
@@ -86,12 +89,12 @@ int main(int argc, char *argv[])
 	static const vector<string> PLANET = {
 		"attributes", "landscape", "music", "description", "spaceport", "shipyard", "outfitter",
 		"required reputation", "bribe", "security", "tribute"};
-	
+
 	DataWriter out;
 	Write(out, "galaxy", galaxies, GALAXY);
 	Write(out, "system", systems, SYSTEM);
 	Write(out, "planet", planets, PLANET);
-	
+
 	string output = out.ToString();
 	// Handle the fact that the map editor always uses backticks for
 	// descriptions and spaceports even when not required.
@@ -104,7 +107,7 @@ int main(int argc, char *argv[])
 			size_t pos = output.find(fix, start);
 			if(pos == string::npos)
 				break;
-		
+
 			pos += fix.length();
 			output[pos - 1] = '`';
 			while(pos < output.length() && output[pos] != '\n')
@@ -114,7 +117,7 @@ int main(int argc, char *argv[])
 		}
 	}
 	cout << output;
-	
+
 	return 0;
 }
 
@@ -135,28 +138,28 @@ void Write(DataWriter &out, const string &root, const map<string, Object> &data,
 	{
 		out.Write(root, it.first);
 		out.BeginChild();
-		
+
 		const Object &object = it.second;
 		set<string> used;
 		for(const string &tag : order)
 		{
 			used.insert(tag);
-			
+
 			auto oit = object.find(tag);
 			if(oit == object.end())
 				continue;
-			
+
 			for(const DataNode &node : oit->second)
 				out.Write(node);
 		}
-		
+
 		for(const auto &oit : object)
 			if(!used.count(oit.first))
 			{
 				for(const DataNode &node : oit.second)
 					out.Write(node);
 			}
-		
+
 		out.EndChild();
 		out.AddLineBreak();
 	}
