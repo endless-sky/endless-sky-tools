@@ -25,13 +25,13 @@ class DisjointSet {
 public:
 	void Join(const std::string &first, const std::string &second);
 	bool IsJoined(const std::string &first, const std::string &second) const;
-	
-	
+
+
 private:
 	void Add(const std::string &token);
 	const std::string &Root(const std::string &token) const;
-	
-	
+
+
 private:
 	std::map<std::string, std::vector<std::string>> entries;
 };

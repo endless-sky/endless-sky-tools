@@ -20,19 +20,19 @@ void DisjointSet::Join(const string &first, const string &second)
 {
 	Add(first);
 	Add(second);
-	
+
 	string firstRoot = Root(first);
 	string secondRoot = Root(second);
 	if(firstRoot == secondRoot)
 		return;
-	
+
 	vector<string> &firstEntry = entries[firstRoot];
 	vector<string> &secondEntry = entries[secondRoot];
-	
+
 	bool firstIsSmaller = (firstEntry.size() < secondEntry.size());
 	vector<string> &smaller = firstIsSmaller ? firstEntry : secondEntry;
 	vector<string> &larger = firstIsSmaller ? secondEntry : firstEntry;
-	
+
 	const string &newRoot = firstIsSmaller ? secondRoot : firstRoot;
 	larger.insert(larger.end(), smaller.begin(), smaller.end());
 	for(const string &token : smaller)
@@ -50,12 +50,12 @@ bool DisjointSet::IsJoined(const string &first, const string &second) const
 {
 	if(first == second)
 		return true;
-	
+
 	string firstRoot = Root(first);
 	string secondRoot = Root(second);
 	if(firstRoot.empty() || secondRoot.empty())
 		return false;
-	
+
 	return firstRoot == secondRoot;
 }
 

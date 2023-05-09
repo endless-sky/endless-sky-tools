@@ -67,7 +67,7 @@ double DataNode::Value(int index) const
 		PrintTrace("Requested token index (" + to_string(index) + ") is out of bounds:");
 		return 0.;
 	}
-	
+
 	// Allowed format: "[+-]?[0-9]*[.]?[0-9]*([eE][+-]?[0-9]*)?".
 	const char *it = tokens[index].c_str();
 	if(*it != '-' && *it != '.' && *it != '+' && !(*it >= '0' && *it <= '9'))
@@ -75,16 +75,16 @@ double DataNode::Value(int index) const
 		PrintTrace("Cannot convert value \"" + tokens[index] + "\" to a number:");
 		return 0.;
 	}
-	
+
 	// Check for leading sign.
 	double sign = (*it == '-') ? -1. : 1.;
 	it += (*it == '-' || *it == '+');
-	
+
 	// Digits before the decimal point.
 	int64_t value = 0;
 	while(*it >= '0' && *it <= '9')
 		value = (value * 10) + (*it++ - '0');
-	
+
 	// Digits after the decimal point (if any).
 	int64_t power = 0;
 	if(*it == '.')
@@ -96,21 +96,21 @@ double DataNode::Value(int index) const
 			--power;
 		}
 	}
-	
+
 	// Exponent.
 	if(*it == 'e' || *it == 'E')
 	{
 		++it;
 		int64_t sign = (*it == '-') ? -1 : 1;
 		it += (*it == '-' || *it == '+');
-		
+
 		int64_t exponent = 0;
 		while(*it >= '0' && *it <= '9')
 			exponent = (exponent * 10) + (*it++ - '0');
-		
+
 		power += sign * exponent;
 	}
-	
+
 	// Compose the return value.
 	return copysign(value * pow(10., power), sign);
 }
@@ -143,13 +143,13 @@ int DataNode::PrintTrace(const string &message) const
 {
 	if(!message.empty())
 		cerr << endl << message << endl;
-	
+
 	int indent = 0;
 	if(parent)
 		indent = parent->PrintTrace() + 2;
 	if(tokens.empty())
 		return indent;
-	
+
 	string line(indent, ' ');
 	for(const string &token : tokens)
 	{
@@ -164,6 +164,6 @@ int DataNode::PrintTrace(const string &message) const
 			line += hasQuote ? '`' : '"';
 	}
 	cerr << line << endl;
-	
+
 	return indent;
 }

@@ -29,26 +29,26 @@ class DataNode {
 public:
 	DataNode(const DataNode *parent = nullptr);
 	DataNode(const DataNode &other);
-	
+
 	DataNode &operator=(const DataNode &other);
-	
+
 	int Size() const;
 	const std::string &Token(int index) const;
 	double Value(int index) const;
-	
+
 	bool HasChildren() const;
 	std::list<DataNode>::const_iterator begin() const;
 	std::list<DataNode>::const_iterator end() const;
-	
+
 	// Print a message followed by a "trace" of this node and its parents.
 	int PrintTrace(const std::string &message = "") const;
-	
-	
+
+
 private:
 	std::list<DataNode> children;
 	std::vector<std::string> tokens;
 	const DataNode *parent = nullptr;
-	
+
 	friend class DataFile;
 };
 
