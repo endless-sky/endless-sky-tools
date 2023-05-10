@@ -146,7 +146,7 @@ int main(int argc, char *argv[])
 			for(const auto &it : links)
 				if(it.second.size())
 				{
-					double share = trade[it.first] /it.second.size();
+					double share = trade[it.first] / it.second.size();
 					for(const string &link : it.second)
 						supply[link] += share;
 				}
