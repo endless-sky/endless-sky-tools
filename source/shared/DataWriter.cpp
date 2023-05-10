@@ -103,6 +103,13 @@ void DataWriter::AddLineBreak()
 
 void DataWriter::WriteToken(const char *a)
 {
+	WriteToken(string(a));
+}
+
+
+
+void DataWriter::WriteToken(const string &a)
+{
 	// Figure out what kind of quotation marks need to be used for this string.
 	bool hasSpace = any_of(a.begin(), a.end(), [](char c) { return isspace(c); });
 	bool hasQuote = any_of(a.begin(), a.end(), [](char c) { return (c == '"'); });
@@ -115,11 +122,4 @@ void DataWriter::WriteToken(const char *a)
 	else
 		out << a;
 	before = &space;
-}
-
-
-
-void DataWriter::WriteToken(const string &a)
-{
-	WriteToken(a.c_str());
 }
