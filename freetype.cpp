@@ -45,8 +45,10 @@ int main(int argc, char *argv[])
 
 	// Hint the font for normal DPI, but render it at high DPI.
 	FT_Matrix transform;
-	transform.xx = 0x20000; transform.xy = 0x00000;
-	transform.yx = 0x00000; transform.yy = 0x20000;
+	transform.xx = 0x20000;
+	transform.xy = 0x00000;
+	transform.yx = 0x00000;
+	transform.yy = 0x20000;
 	FT_Vector offset;
 	offset.x = 0;
 	offset.y = 0;
