@@ -1,4 +1,4 @@
-/* color-converters.cpp
+/* color-converter.cpp
 Copyright (c) 2023 by warp-core
 
 Endless Sky is free software: you can redistribute it and/or modify it under the
