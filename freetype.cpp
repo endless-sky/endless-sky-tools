@@ -10,12 +10,12 @@ using namespace std;
 
 static const int GLYPHS = 98;
 
-/*static const int FONT_SIZE = 14;
-static const int CHAR_W = 28;
-static const int CHAR_H = 32;
-static const int BASE = 26;
-static const int LEFT = 2;
-static const int DPI = 72;*/
+// static const int FONT_SIZE = 14;
+// static const int CHAR_W = 28;
+// static const int CHAR_H = 32;
+// static const int BASE = 26;
+// static const int LEFT = 2;
+// static const int DPI = 72;
 
 static const int FONT_SIZE = 18;
 static const int CHAR_W = 36;
