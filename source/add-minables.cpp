@@ -20,9 +20,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <cstdlib>
 #include <iostream>
 #include <map>
+#include <random>
 #include <sstream>
 #include <string>
-#include <random>
 
 using namespace std;
 
