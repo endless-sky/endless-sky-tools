@@ -36,20 +36,20 @@ using namespace std;
 class System {
 public:
 	void Load(const DataNode &node);
-	
+
 	const vector<string> &Links() const;
-	
+
 	void SetTrade(const string &commodity, double value);
-	
+
 	void Write(DataWriter &out) const;
-	
-	
+
+
 private:
 	string name;
 	double x;
 	double y;
 	vector<string> links;
-	
+
 	map<string, double> trade;
 };
 
@@ -66,9 +66,9 @@ int main(int argc, char *argv[])
 {
 	if(argc < 3)
 		return 1;
-	
+
 	srand(time(NULL));
-	
+
 	// Load the "settings."
 	string commodity;
 	int base = 0;
@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
 		for(double &value : binWeight)
 			value /= total;
 	}
-	
+
 	// Load the map file.
 	map<string, System> systems;
 	vector<string> names;
@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
 	vector<int> binQuota;
 	for(double weight : binWeight)
 		binQuota.push_back(ceil(weight * names.size()) + 1);
-	
+
 	// Look for an arrangement that works.
 	int highBin = binQuota.size();
 	map<string, Value> values;
@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
 			values[name].minBin = 0;
 			values[name].maxBin = highBin;
 		}
-		
+
 		// Keep track of which stars haven't been assigned values yet.
 		vector<string> unassigned = names;
 		while(unassigned.size())
@@ -135,7 +135,7 @@ int main(int argc, char *argv[])
 			string name = unassigned[i];
 			unassigned[i] = unassigned.back();
 			unassigned.pop_back();
-			
+
 			// Find out how many items left in our quota could be assigned to
 			// this particular star.
 			int possibilities = 0;
@@ -143,7 +143,7 @@ int main(int argc, char *argv[])
 				possibilities += bin[i];
 			if(!possibilities)
 				break;
-			
+
 			// Pick a random one of those items to assign to it.
 			int index = rand() % possibilities;
 			int choice = values[name].minBin;
@@ -155,12 +155,12 @@ int main(int argc, char *argv[])
 				++choice;
 			}
 			--bin[choice];
-			
+
 			// Record our choice.
 			values[name].bin = choice;
 			int minBin = choice;
 			int maxBin = choice + 1;
-			
+
 			// Starting from this star, trace outwards system by system. Each
 			// neighboring system must be within 1 of this star's level; each
 			// system neighboring those, within 2, and so on.
@@ -173,9 +173,9 @@ int main(int argc, char *argv[])
 					--minBin;
 				if(maxBin < highBin)
 					++maxBin;
-				
+
 				vector<string> next;
-				
+
 				// Update the min and max for each unvisited neighbor.
 				for(const string &sourceName : source)
 					for(const string &name : systems[sourceName].Links())
@@ -183,12 +183,12 @@ int main(int argc, char *argv[])
 						if(done.find(name) != done.end())
 							continue;
 						done.insert(name);
-						
+
 						values[name].minBin = max(values[name].minBin, minBin);
 						values[name].maxBin = min(values[name].maxBin, maxBin);
 						next.push_back(name);
 					}
-				
+
 				// Now, visit neighbors of those neighbors.
 				next.swap(source);
 			}
@@ -200,12 +200,12 @@ int main(int argc, char *argv[])
 		if(!unassigned.size())
 			break;
 	}
-	
+
 	// Assign each star system a value based on its bin.
 	map<string, int> rough;
 	for(auto &it : values)
 		rough[it.first] = base + (rand() % 100) + 100 * it.second.bin;
-	
+
 	// Smooth out the values by averaging each system with the average of all
 	// its neighbors.
 	for(auto &it : systems)
@@ -226,19 +226,19 @@ int main(int argc, char *argv[])
 		}
 		it.second.SetTrade(commodity, sum);
 	}
-	
+
 	// Write the result. This is not a full map; it needs to be merged into the
 	// map using the map-merge tool.
 	DataWriter out;
 	for(const auto &it : systems)
 		it.second.Write(out);
 	string output = out.ToString();
-	
+
 	{
 		ofstream file(argv[1]);
 		file.write(output.data(), output.length());
 	}
-	
+
 	return 0;
 }
 
@@ -249,7 +249,7 @@ void System::Load(const DataNode &node)
 	links.clear();
 	trade.clear();
 	name = node.Token(1);
-	
+
 	for(const DataNode &child : node)
 	{
 		if(child.Token(0) == "pos" && child.Size() >= 3)
@@ -278,13 +278,13 @@ void System::Write(DataWriter &out) const
 {
 	out.Write("system", name);
 	out.BeginChild();
-	
+
 	out.Write("pos", x, y);
 	for(const string &link : links)
 		out.Write("link", link);
 	for(const auto &it : trade)
 		out.Write("trade", it.first, it.second);
-	
+
 	out.EndChild();
 	out.AddLineBreak();
 }

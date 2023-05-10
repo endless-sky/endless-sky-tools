@@ -37,10 +37,10 @@ int main(int argc, char *argv[])
 		PrintHelp();
 		return 1;
 	}
-	
+
 	map<string, string> systems;
 	DisjointSet links;
-	
+
 	ifstream in(argv[1]);
 	string line;
 	string current;
@@ -52,19 +52,19 @@ int main(int argc, char *argv[])
 		// If this line is not indented, it starts a new root object.
 		if(line[0] > ' ')
 			current.clear();
-		
+
 		if(Token(line, 0) == "system")
 			current = Token(line, 1);
 		else if(!current.empty() && Token(line, 0) == "link")
 			links.Join(current, Token(line, 1));
-		
+
 		if(!current.empty())
 		{
 			systems[current] += line;
 			systems[current] += '\n';
 		}
 	}
-	
+
 	vector<string> components;
 	for(char **it = argv + 2; *it; ++it)
 		components.push_back(*it);
@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
 		bool match = components.empty();
 		for(const string &component : components)
 			match |= links.IsJoined(it.first, component);
-		
+
 		if(match)
 			cout << it.second << endl;
 	}
@@ -107,18 +107,18 @@ string Token(const string &line, int index)
 {
 	string::const_iterator it = line.begin();
 	string::const_iterator end = line.end();
-	
+
 	string token;
 	for( ; it != end && index >= 0; --index)
 	{
 		for( ; it != end && *it <= ' '; ++it) {}
-		
+
 		if(it != end)
 		{
 			char quote = '\0';
 			if(*it == '"' || *it == '`')
 				quote = *it;
-			
+
 			if(quote)
 			{
 				++it;

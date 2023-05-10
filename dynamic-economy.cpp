@@ -22,19 +22,19 @@ bool StartsWith(const string &line, const string &str)
 string Token(const string &line, int index)
 {
 	size_t pos = 0;
-	
+
 	while(pos < line.length())
 	{
 		while(line[pos] <= ' ')
 			++pos;
-		
+
 		char quote = 0;
 		if(line[pos] == '"' || line[pos] == '`')
 			quote = line[pos++];
 		size_t start = pos;
 		while(pos < line.length() && (quote ? (line[pos] != quote) : (line[pos] > ' ')))
 			++pos;
-		
+
 		if(!index--)
 			return line.substr(start, pos - start);
 		pos = pos + !!quote;
@@ -72,23 +72,23 @@ int main(int argc, char *argv[])
 {
 	if(argc < 2)
 		return 1;
-	
+
 	mt19937_64 gen;
 	gen.seed(12345);
 	normal_distribution<double> normal;
-	
+
 	map<string, double> posX;
 	map<string, double> posY;
 	map<string, set<string>> links;
-	
+
 	double minX = 0.;
 	double maxX = 0.;
 	double minY = 0.;
 	double maxY = 0.;
-	
+
 	string line;
 	string name;
-	
+
 	ifstream in(argv[1]);
 	while(getline(in, line))
 	{
@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
 		else if(StartsWith(line, "\tlink") && !name.empty())
 			links[name].insert(Token(line, 1));
 	}
-	
+
 	// Add a slight border around the edges.
 	const double BORDER = .05;
 	double xBorder = (maxX - minX) * BORDER;
@@ -124,7 +124,7 @@ int main(int argc, char *argv[])
 	double scale = MAX_DIMENSION / max(maxX - minX, maxY - minY);
 	int width = scale * (maxX - minX);
 	int height = scale * (maxY - minY);
-	
+
 	// Run the simulation repeatedly.
 	map<string, double> supply;
 	map<string, double> trade;
@@ -154,11 +154,11 @@ int main(int argc, char *argv[])
 		// After the first day, step according to the given step size.
 		if(argc > 2)
 			DAYS = stoi(argv[2]);
-	
+
 		ofstream out("economy.svg");
 		out << "<svg width=\"" << width << "\" height=\"" << height << "\">" << endl;
 		out << "<rect width=\"" << width << "\" height=\"" << height << "\" fill=\"black\" />" << endl;
-	
+
 		// Draw the links.
 		for(const auto &it : posX)
 		{
@@ -172,12 +172,12 @@ int main(int argc, char *argv[])
 					continue;
 				double x2 = (posX[link] - minX) * scale;
 				double y2 = (posY[link] - minY) * scale;
-			
+
 				out << "<line x1=\"" << x1 << "\" y1=\"" << y1 << "\" x2=\"" << x2 << "\" y2=\"" << y2
 					<< "\" style=\"stroke:#444444;stroke-width:1.5\" />" << endl;
 			}
 		}
-	
+
 		// Draw circles for the systems.
 		double lowest = 1.;
 		double highest = -1.;
@@ -191,14 +191,14 @@ int main(int argc, char *argv[])
 			highest = max(value, highest);
 			double r, g, b;
 			MapColor(value, &r, &g, &b);
-		
+
 			out << "<circle cx=\"" << x << "\" cy=\"" << y << "\" r=\"" << RADIUS
 				<< "\" fill=\"rgb(" << r << "%, " << g << "%, " << b << "%)\" />" << endl;
 		}
-	
+
 		out << "</svg>" << endl;
 		out.close();
-		
+
 		cout << "Adjustment range: " << lowest << " to " << highest;
 		cin.get();
 		if(!cin)

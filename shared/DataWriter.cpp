@@ -48,7 +48,7 @@ void DataWriter::Write(const DataNode &node)
 	for(int i = 0; i < node.Size(); ++i)
 		WriteToken(node.Token(i).c_str());
 	Write();
-	
+
 	if(node.begin() != node.end())
 	{
 		BeginChild();
@@ -107,7 +107,7 @@ void DataWriter::WriteToken(const char *a)
 		hasSpace |= (*it <= ' ');
 		hasQuote |= (*it == '"');
 	}
-	
+
 	out << *before;
 	if(hasSpace && hasQuote)
 		out << '`' << a << '`';

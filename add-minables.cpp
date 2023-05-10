@@ -31,19 +31,19 @@ bool StartsWith(const string &line, const string &str)
 string Token(const string &line, int index)
 {
 	size_t pos = 0;
-	
+
 	while(pos < line.length())
 	{
 		while(line[pos] <= ' ')
 			++pos;
-		
+
 		char quote = 0;
 		if(line[pos] == '"' || line[pos] == '`')
 			quote = line[pos++];
 		size_t start = pos;
 		while(pos < line.length() && (quote ? (line[pos] != quote) : (line[pos] > ' ')))
 			++pos;
-		
+
 		if(!index--)
 			return line.substr(start, pos - start);
 		pos = pos + !!quote;
@@ -63,11 +63,11 @@ double Value(const string &line, int index)
 int main(int argc, char *argv[])
 {
 	srand(time(nullptr));
-	
+
 	random_device rd;
 	mt19937 gen(rd());
 	uniform_real_distribution<> real(0., 1.);
-	
+
 	map<string, double> probability = {
 		{"aluminum",  0.12},
 		{"copper",  0.08},
@@ -82,13 +82,13 @@ int main(int argc, char *argv[])
 		{"tungsten",  0.06},
 		{"uranium",  0.04}
 	};
-	
+
 	bool skip = true;
 	bool previousWasHabitable = false;
 	bool previousWasAsteroids = false;
 	int totalCount = 0;
 	double totalEnergy = 0.;
-	
+
 	string line;
 	while(getline(cin, line))
 	{
@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
 			if(!skip)
 				cout << "\tbelt " << static_cast<int>(1000. + 1000. * real(gen)) << '\n';
 		}
-		
+
 		if(!skip && StartsWith(line, "\tasteroids"))
 		{
 			previousWasAsteroids = true;
@@ -116,9 +116,9 @@ int main(int argc, char *argv[])
 		{
 			previousWasAsteroids = false;
 			double meanEnergy = totalCount ? (totalEnergy / totalCount) : 0.;
-			
+
 			map<string, double> choices;
-			
+
 			// Minables should be much less prevalent than ordinary asteroids.
 			totalCount /= 4;
 			for(int i = 0; i < 3; ++i)
@@ -126,7 +126,7 @@ int main(int argc, char *argv[])
 				totalCount = rand() % (totalCount + 1);
 				if(!totalCount)
 					break;
-				
+
 				double choice = real(gen);
 				for(const auto &it : probability)
 				{
