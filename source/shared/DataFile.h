@@ -7,7 +7,10 @@ Foundation, either version 3 of the License, or (at your option) any later versi
 
 Endless Sky is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
 #ifndef DATA_FILE_H_
@@ -31,18 +34,18 @@ public:
 	DataFile() = default;
 	DataFile(const std::string &path);
 	DataFile(std::istream &in);
-	
+
 	void Load(const std::string &path);
 	void Load(std::istream &in);
-	
+
 	std::list<DataNode>::const_iterator begin() const;
 	std::list<DataNode>::const_iterator end() const;
-	
-	
+
+
 private:
 	void Load(const char *it, const char *end);
-	
-	
+
+
 private:
 	DataNode root;
 };

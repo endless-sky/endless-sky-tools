@@ -1,7 +1,23 @@
+/* freetype.cpp
+Copyright (c) 2016 by Michael Zahniser
+
+Endless Sky is free software: you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later version.
+
+Endless Sky is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program. If not, see <https://www.gnu.org/licenses/>.
+*/
+
 // g++ -o freetype freetype.cpp `pkg-config --cflags --libs freetype2`
-#include <vector>
-#include <iostream>
+
 #include <fstream>
+#include <iostream>
+#include <vector>
 
 #include <freetype2/ft2build.h>
 #include FT_FREETYPE_H
@@ -10,12 +26,12 @@ using namespace std;
 
 static const int GLYPHS = 98;
 
-/*static const int FONT_SIZE = 14;
-static const int CHAR_W = 28;
-static const int CHAR_H = 32;
-static const int BASE = 26;
-static const int LEFT = 2;
-static const int DPI = 72;*/
+// static const int FONT_SIZE = 14;
+// static const int CHAR_W = 28;
+// static const int CHAR_H = 32;
+// static const int BASE = 26;
+// static const int LEFT = 2;
+// static const int DPI = 72;
 
 static const int FONT_SIZE = 18;
 static const int CHAR_W = 36;
@@ -36,22 +52,24 @@ int main(int argc, char *argv[])
 {
 	FT_Library library;
 	FT_Init_FreeType(&library);
-	
+
 	FT_Face face;
 	FT_New_Face(library, filename, 0, &face);
-	
+
 	FT_Set_Char_Size(face, FONT_SIZE * 64, 0, DPI, 0);
 	FT_GlyphSlot slot = face->glyph;
-	
+
 	// Hint the font for normal DPI, but render it at high DPI.
 	FT_Matrix transform;
-	transform.xx = 0x20000; transform.xy = 0x00000;
-	transform.yx = 0x00000; transform.yy = 0x20000;
+	transform.xx = 0x20000;
+	transform.xy = 0x00000;
+	transform.yx = 0x00000;
+	transform.yy = 0x20000;
 	FT_Vector offset;
 	offset.x = 0;
 	offset.y = 0;
 	FT_Set_Transform(face, &transform, &offset);
-	
+
 	vector<unsigned char> image(WIDTH * HEIGHT, 0);
 	vector<unsigned char>::iterator start = image.begin();
 	for(int n = 32; n < 130; ++n)
@@ -67,18 +85,18 @@ int main(int argc, char *argv[])
 		if(n == 129)
 			trueN = 0x201C;
 		FT_Load_Char(face, trueN, FT_LOAD_RENDER | FT_LOAD_FORCE_AUTOHINT);
-		
-		/*cout << n << '\t' << "'" << char(n) << '\t' << slot->bitmap.width << '\t'
-			<< slot->bitmap.rows << '\t' << slot->bitmap_left << '\t'
-			<< slot->bitmap_top << endl;*/
-		
+
+		// cout << n << '\t' << "'" << char(n) << '\t' << slot->bitmap.width << '\t'
+			// << slot->bitmap.rows << '\t' << slot->bitmap_left << '\t'
+			// << slot->bitmap_top << endl;
+
 		// Copy the glyph into the output bitmap.
 		for(int row = 0; row < slot->bitmap.rows; ++row)
 		{
 			int y = BASE - slot->bitmap_top + row;
 			if(y < 0 || y >= CHAR_H)
 				continue;
-			
+
 			vector<unsigned char>::iterator it = start + WIDTH * (CHAR_H - 1 - y) + LEFT;
 			// If drawing at 2x resolution, match the 1x resolution alignment.
 			if(slot->bitmap_left & 1)
@@ -88,11 +106,11 @@ int main(int argc, char *argv[])
 		}
 		start += GLYPH_PITCH;
 	}
-	
+
 	ofstream out("font.bmp", ios::out | ios::binary);
 	out.put('B');
 	out.put('M');
-	
+
 	unsigned size = WIDTH * HEIGHT * 4 + 54;
 	out.put((size >> 0) & 0xFF);
 	out.put((size >> 8) & 0xFF);
@@ -106,7 +124,7 @@ int main(int argc, char *argv[])
 	out.put(0);
 	out.put(0);
 	out.put(0);
-	
+
 	out.put(40);
 	out.put(0);
 	out.put(0);
@@ -125,7 +143,7 @@ int main(int argc, char *argv[])
 	out.put(0);
 	for(int i = 0; i < 24; ++i)
 		out.put(0);
-	
+
 	for(vector<unsigned char>::iterator it = image.begin(); it != image.end(); ++it)
 	{
 		out.put(*it);
@@ -133,6 +151,6 @@ int main(int argc, char *argv[])
 		out.put(*it);
 		out.put(255);
 	}
-	
+
 	return 0;
 }

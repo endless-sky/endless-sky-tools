@@ -1,0 +1,41 @@
+name: Check
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [opened, synchronize]
+
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}-${{ github.event_name }}
+  cancel-in-progress: true
+
+jobs:
+  changed:
+    uses: ./.github/workflows/compute-changes.yml
+
+
+  style_check:
+    name: Style
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: editorconfig-checker/action-editorconfig-checker@main
+    - run: editorconfig-checker
+
+
+  check_coding_style:
+    name: Code Style
+    needs: changed
+    if: ${{ needs.changed.outputs.source_code == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+    - name: Install dependencies
+      run: pip install regex
+    - name: Run style checker
+      run: python ./utils/check_code_style.py
