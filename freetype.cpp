@@ -68,9 +68,9 @@ int main(int argc, char *argv[])
 			trueN = 0x201C;
 		FT_Load_Char(face, trueN, FT_LOAD_RENDER | FT_LOAD_FORCE_AUTOHINT);
 
-		/*cout << n << '\t' << "'" << char(n) << '\t' << slot->bitmap.width << '\t'
-			<< slot->bitmap.rows << '\t' << slot->bitmap_left << '\t'
-			<< slot->bitmap_top << endl;*/
+		// cout << n << '\t' << "'" << char(n) << '\t' << slot->bitmap.width << '\t'
+			// << slot->bitmap.rows << '\t' << slot->bitmap_left << '\t'
+			// << slot->bitmap_top << endl;
 
 		// Copy the glyph into the output bitmap.
 		for(int row = 0; row < slot->bitmap.rows; ++row)
