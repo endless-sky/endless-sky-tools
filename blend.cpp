@@ -15,12 +15,12 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 // g++ --std=c++0x blend.cpp -o blend -lpng
 
-#include <zlib.h>
 #include <png.h>
+#include <zlib.h>
 
+#include <algorithm>
 #include <iostream>
 #include <vector>
-#include <algorithm>
 
 using namespace std;
 

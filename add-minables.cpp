@@ -20,9 +20,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <cstdlib>
 #include <iostream>
 #include <map>
+#include <sstream>
 #include <string>
 #include <random>
-#include <sstream>
 
 using namespace std;
 
@@ -72,18 +72,18 @@ int main(int argc, char *argv[])
 	uniform_real_distribution<> real(0., 1.);
 
 	map<string, double> probability = {
-		{"aluminum",  0.12},
-		{"copper",  0.08},
-		{"gold",  0.02},
-		{"iron",  0.13},
-		{"lead",  0.15},
-		{"neodymium",  0.03},
-		{"platinum",  0.01},
-		{"silicon",  0.2},
-		{"silver",  0.05},
-		{"titanium",  0.11},
-		{"tungsten",  0.06},
-		{"uranium",  0.04}
+		{"aluminum", 0.12},
+		{"copper", 0.08},
+		{"gold", 0.02},
+		{"iron", 0.13},
+		{"lead", 0.15},
+		{"neodymium", 0.03},
+		{"platinum", 0.01},
+		{"silicon", 0.2},
+		{"silver", 0.05},
+		{"titanium", 0.11},
+		{"tungsten", 0.06},
+		{"uranium", 0.04}
 	};
 
 	bool skip = true;

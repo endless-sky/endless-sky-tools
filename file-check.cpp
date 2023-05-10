@@ -17,8 +17,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 // $ g++ --std=c++11 -o file-check file-check.cpp
 // $ ./file-check path/to/data/*.txt
 
-#include <iostream>
 #include <fstream>
+#include <iostream>
 
 using namespace std;
 

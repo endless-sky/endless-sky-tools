@@ -17,12 +17,12 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 // $ g++ --std=c++11 -o mapper mapper.cpp
 // $ ./mapper path/to/map.txt path/to/governments.txt > map.svg
 
-#include <iostream>
 #include <fstream>
-#include <string>
+#include <iostream>
 #include <map>
 #include <set>
 #include <sstream>
+#include <string>
 
 using namespace std;
 

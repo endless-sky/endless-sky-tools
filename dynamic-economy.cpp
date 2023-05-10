@@ -18,14 +18,14 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 // $ g++ --std=c++11 -o dynamic-economy dynamic-economy.cpp
 // $ ./dynamic-economy path/to/map.txt
 
-#include <iostream>
+#include <cmath>
 #include <fstream>
-#include <string>
+#include <iostream>
 #include <map>
+#include <random>
 #include <set>
 #include <sstream>
-#include <cmath>
-#include <random>
+#include <string>
 
 using namespace std;
 
@@ -161,7 +161,7 @@ int main(int argc, char *argv[])
 			for(const auto &it : links)
 				if(it.second.size())
 				{
-					double share = trade[it.first] /it.second.size();
+					double share = trade[it.first] / it.second.size();
 					for(const string &link : it.second)
 						supply[link] += share;
 				}

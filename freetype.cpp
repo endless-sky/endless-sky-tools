@@ -15,9 +15,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 // g++ -o freetype freetype.cpp `pkg-config --cflags --libs freetype2`
 
-#include <vector>
-#include <iostream>
 #include <fstream>
+#include <iostream>
+#include <vector>
 
 #include <freetype2/ft2build.h>
 #include FT_FREETYPE_H
@@ -26,12 +26,12 @@ using namespace std;
 
 static const int GLYPHS = 98;
 
-/*static const int FONT_SIZE = 14;
-static const int CHAR_W = 28;
-static const int CHAR_H = 32;
-static const int BASE = 26;
-static const int LEFT = 2;
-static const int DPI = 72;*/
+// static const int FONT_SIZE = 14;
+// static const int CHAR_W = 28;
+// static const int CHAR_H = 32;
+// static const int BASE = 26;
+// static const int LEFT = 2;
+// static const int DPI = 72;
 
 static const int FONT_SIZE = 18;
 static const int CHAR_W = 36;
@@ -61,8 +61,10 @@ int main(int argc, char *argv[])
 
 	// Hint the font for normal DPI, but render it at high DPI.
 	FT_Matrix transform;
-	transform.xx = 0x20000; transform.xy = 0x00000;
-	transform.yx = 0x00000; transform.yy = 0x20000;
+	transform.xx = 0x20000;
+	transform.xy = 0x00000;
+	transform.yx = 0x00000;
+	transform.yy = 0x20000;
 	FT_Vector offset;
 	offset.x = 0;
 	offset.y = 0;
@@ -84,9 +86,9 @@ int main(int argc, char *argv[])
 			trueN = 0x201C;
 		FT_Load_Char(face, trueN, FT_LOAD_RENDER | FT_LOAD_FORCE_AUTOHINT);
 
-		/*cout << n << '\t' << "'" << char(n) << '\t' << slot->bitmap.width << '\t'
-			<< slot->bitmap.rows << '\t' << slot->bitmap_left << '\t'
-			<< slot->bitmap_top << endl;*/
+		// cout << n << '\t' << "'" << char(n) << '\t' << slot->bitmap.width << '\t'
+			// << slot->bitmap.rows << '\t' << slot->bitmap_left << '\t'
+			// << slot->bitmap_top << endl;
 
 		// Copy the glyph into the output bitmap.
 		for(int row = 0; row < slot->bitmap.rows; ++row)

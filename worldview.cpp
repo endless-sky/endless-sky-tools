@@ -20,14 +20,14 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "shared/DataFile.cpp"
 #include "shared/DataNode.cpp"
 
-#include <vector>
-#include <map>
-#include <string>
-#include <iostream>
-#include <limits>
 #include <algorithm>
 #include <fstream>
+#include <iostream>
+#include <limits>
+#include <map>
 #include <set>
+#include <string>
+#include <vector>
 
 using namespace std;
 
@@ -110,7 +110,8 @@ int main(int argc, char *argv[])
 
 	// Draw all systems:
 	ofstream mapFile("map.svg");
-	mapFile << "<svg width=\"240\" height=\"240\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n";
+	mapFile << "<svg width=\"240\" height=\"240\" xmlns=\"http://www.w3.org/2000/svg\" "
+			"xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n";
 	double radius = 120.;
 	double scale = 2. * (radius - 1.) / max(maxX - minX, maxY - minY);
 	double centerX = (minX + maxX) / 2.;
