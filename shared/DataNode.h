@@ -7,7 +7,10 @@ Foundation, either version 3 of the License, or (at your option) any later versi
 
 Endless Sky is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
 #ifndef DATA_NODE_H_
@@ -29,26 +32,26 @@ class DataNode {
 public:
 	DataNode(const DataNode *parent = nullptr);
 	DataNode(const DataNode &other);
-	
+
 	DataNode &operator=(const DataNode &other);
-	
+
 	int Size() const;
 	const std::string &Token(int index) const;
 	double Value(int index) const;
-	
+
 	bool HasChildren() const;
 	std::list<DataNode>::const_iterator begin() const;
 	std::list<DataNode>::const_iterator end() const;
-	
+
 	// Print a message followed by a "trace" of this node and its parents.
 	int PrintTrace(const std::string &message = "") const;
-	
-	
+
+
 private:
 	std::list<DataNode> children;
 	std::vector<std::string> tokens;
 	const DataNode *parent = nullptr;
-	
+
 	friend class DataFile;
 };
 

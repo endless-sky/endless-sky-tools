@@ -7,7 +7,10 @@ Foundation, either version 3 of the License, or (at your option) any later versi
 
 Endless Sky is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
 #ifndef DATA_WRITER_H_
@@ -31,7 +34,7 @@ public:
 
 	string ToString() const;
 
-  template <class A, class ...B>
+	template <class A, class ...B>
 	void Write(const A &a, B... others);
 	void Write(const DataNode &node);
 	void Write();
@@ -45,7 +48,7 @@ public:
 	// Write a token, without writing a whole line. Use this very carefully.
 	void WriteToken(const char *a);
 	void WriteToken(const std::string &a);
-  template <class A>
+	template <class A>
 	void WriteToken(const A &a);
 
 

@@ -7,7 +7,10 @@ Foundation, either version 3 of the License, or (at your option) any later versi
 
 Endless Sky is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "DisjointSet.h"
@@ -20,19 +23,19 @@ void DisjointSet::Join(const string &first, const string &second)
 {
 	Add(first);
 	Add(second);
-	
+
 	string firstRoot = Root(first);
 	string secondRoot = Root(second);
 	if(firstRoot == secondRoot)
 		return;
-	
+
 	vector<string> &firstEntry = entries[firstRoot];
 	vector<string> &secondEntry = entries[secondRoot];
-	
+
 	bool firstIsSmaller = (firstEntry.size() < secondEntry.size());
 	vector<string> &smaller = firstIsSmaller ? firstEntry : secondEntry;
 	vector<string> &larger = firstIsSmaller ? secondEntry : firstEntry;
-	
+
 	const string &newRoot = firstIsSmaller ? secondRoot : firstRoot;
 	larger.insert(larger.end(), smaller.begin(), smaller.end());
 	for(const string &token : smaller)
@@ -50,12 +53,12 @@ bool DisjointSet::IsJoined(const string &first, const string &second) const
 {
 	if(first == second)
 		return true;
-	
+
 	string firstRoot = Root(first);
 	string secondRoot = Root(second);
 	if(firstRoot.empty() || secondRoot.empty())
 		return false;
-	
+
 	return firstRoot == secondRoot;
 }
 
